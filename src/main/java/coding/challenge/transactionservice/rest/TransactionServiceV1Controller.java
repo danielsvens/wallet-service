@@ -1,6 +1,7 @@
 package coding.challenge.transactionservice.rest;
 
 import coding.challenge.transactionservice.enums.TransactionType;
+import coding.challenge.transactionservice.exception.UniqueIdViolationException;
 import coding.challenge.transactionservice.pojo.Player;
 import coding.challenge.transactionservice.pojo.Transaction;
 import coding.challenge.transactionservice.response.PlayerCreatedResponse;
@@ -10,6 +11,7 @@ import coding.challenge.transactionservice.service.AccountService;
 import coding.challenge.transactionservice.service.PlayerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,9 +33,16 @@ public class TransactionServiceV1Controller implements TransactionServiceV1 {
 
   @Override
   public ResponseEntity<PlayerCreatedResponse> create(@Valid Player player) {
-    long playerId = playerService.createNewPlayer(player);
-    var created = PlayerCreatedResponse.builder().balance(0L).id(playerId).build();
+    long playerId;
 
+    try {
+      playerId = playerService.createNewPlayer(player);
+    } catch (DataIntegrityViolationException e) {
+      log.error(e.getMessage());
+      throw new UniqueIdViolationException("Player already exist.");
+    }
+
+    var created = PlayerCreatedResponse.builder().balance(0L).id(playerId).build();
     log.info("New played created with id: {}", playerId);
 
     return new ResponseEntity<>(created, HttpStatus.CREATED);

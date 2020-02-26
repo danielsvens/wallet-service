@@ -9,6 +9,7 @@ import coding.challenge.transactionservice.repository.PlayerRepository;
 import coding.challenge.transactionservice.repository.TransactionRepository;
 import coding.challenge.transactionservice.response.PlayerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -25,7 +26,7 @@ public class PlayerService {
     this.transactionRepository = transactionRepository;
   }
 
-  public long createNewPlayer(Player player) {
+  public long createNewPlayer(Player player) throws DataIntegrityViolationException {
     return playerRepository.save(PlayerModel.builder()
             .userName(player.getName())
             .account(AccountModel.builder().balance(0L).build())
