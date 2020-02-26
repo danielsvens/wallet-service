@@ -8,6 +8,7 @@ import coding.challenge.transactionservice.response.PlayerResponse;
 import coding.challenge.transactionservice.response.TransactionRegisteredResponse;
 import coding.challenge.transactionservice.service.AccountService;
 import coding.challenge.transactionservice.service.PlayerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 public class TransactionServiceV1Controller implements TransactionServiceV1 {
 
@@ -32,6 +34,8 @@ public class TransactionServiceV1Controller implements TransactionServiceV1 {
     long playerId = playerService.createNewPlayer(player);
     var created = PlayerCreatedResponse.builder().balance(0L).id(playerId).build();
 
+    log.info("New played created with id: {}", playerId);
+
     return new ResponseEntity<>(created, HttpStatus.CREATED);
   }
 
@@ -44,6 +48,8 @@ public class TransactionServiceV1Controller implements TransactionServiceV1 {
             .message("Amount: " + transaction.getAmount() + " was successfully added to funds.")
             .build();
 
+    log.info("Added {} funds to account", balance);
+
     return new ResponseEntity<>(transactionResponse, HttpStatus.OK);
   }
 
@@ -55,6 +61,8 @@ public class TransactionServiceV1Controller implements TransactionServiceV1 {
             .balance(balance)
             .message("Amount: " + -transaction.getAmount() + " was successfully withdrawn from funds")
             .build();
+
+    log.info("Withdrew {} funds from account", balance);
 
     return new ResponseEntity<>(transactionResponse, HttpStatus.OK);
   }

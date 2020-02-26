@@ -31,21 +31,22 @@ public class AccountService {
     var player = playerRepository.findById(transaction.getPlayerId())
             .orElseThrow(() -> new PlayerNotFoundException("Player not found"));
 
-      if (transaction.getType() == TransactionType.DEBIT && !isValidDebit(player.getAccount(), transaction)) {
-        throw new InsufficientFundsException("Not enough funds to withdraw from");
-      }
+    if (transaction.getType() == TransactionType.DEBIT && !isValidDebit(player.getAccount(), transaction)) {
+      throw new InsufficientFundsException("Not enough funds to withdraw from");
+    }
 
-      addTransaction(player.getAccount(), transaction);
-      modifyBalance(player.getAccount(), transaction);
+    addTransaction(player.getAccount(), transaction);
+    modifyBalance(player.getAccount(), transaction);
 
-      saveTransaction(player);
-      return player.getAccount().getBalance();
+    saveTransaction(player);
+    return player.getAccount().getBalance();
   }
 
   private void saveTransaction(PlayerModel player) {
     try {
       playerRepository.save(player);
     } catch (DataIntegrityViolationException e) {
+      log.error(e.getMessage());
       throw new UniqueIdViolationException("TransactionId must be unique.");
     }
   }
