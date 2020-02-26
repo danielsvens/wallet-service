@@ -1,5 +1,6 @@
 package coding.challenge.transactionservice.rest;
 
+import coding.challenge.transactionservice.Enum.TransactionType;
 import coding.challenge.transactionservice.pojo.Player;
 import coding.challenge.transactionservice.pojo.Transaction;
 import coding.challenge.transactionservice.response.PlayerCreatedResponse;
@@ -36,7 +37,8 @@ public class TransactionServiceV1Controller implements TransactionServiceV1 {
 
   @Override
   public ResponseEntity<TransactionRegisteredResponse> credit(@Valid Transaction transaction) {
-    long balance = accountService.credit(transaction);
+    transaction.setType(TransactionType.CREDIT);
+    long balance = accountService.makeTransaction(transaction);
     var transactionResponse = TransactionRegisteredResponse.builder()
             .balance(balance)
             .message("Amount: " + transaction.getAmount() + " was successfully added to funds.")
@@ -47,7 +49,8 @@ public class TransactionServiceV1Controller implements TransactionServiceV1 {
 
   @Override
   public ResponseEntity<TransactionRegisteredResponse> debit(@Valid Transaction transaction) {
-    long balance = accountService.debit(transaction);
+    transaction.setType(TransactionType.DEBIT);
+    long balance = accountService.makeTransaction(transaction);
     var transactionResponse = TransactionRegisteredResponse.builder()
             .balance(balance)
             .message("Amount: " + -transaction.getAmount() + " was successfully withdrawn from funds")

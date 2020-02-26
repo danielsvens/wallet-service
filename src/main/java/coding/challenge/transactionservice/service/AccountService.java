@@ -27,34 +27,23 @@ public class AccountService {
     this.playerRepository = playerRepository;
   }
 
-  public long credit(Transaction transaction) {
-    transaction.setType(TransactionType.CREDIT);
-    var player = playerRepository.findById(transaction.getPlayerId());
+  public long makeTransaction(Transaction transaction) {
+    var player = playerRepository.findById(transaction.getPlayerId())
+            .orElseThrow(() -> new PlayerNotFoundException("Player not found"));;
 
-    player.ifPresent(playerModel -> makeTransaction(playerModel, transaction));
-
-    return player.get().getAccount().getBalance();
-  }
-
-  public long debit(Transaction transaction) {
-    transaction.setType(TransactionType.DEBIT);
-    var player = playerRepository.findById(transaction.getPlayerId());
-    if (player.isPresent()) {
-      if (!isValidDebit(player.get().getAccount(), transaction)) {
+      if (transaction.getType() == TransactionType.DEBIT && !isValidDebit(player.getAccount(), transaction)) {
         throw new InsufficientFundsException("Not enough funds to withdraw from");
       }
 
-      makeTransaction(player.get(), transaction);
-      return player.get().getAccount().getBalance();
-    }
-
-    throw new PlayerNotFoundException("Player not found");
-  }
-
-  private void makeTransaction(PlayerModel player, Transaction transaction) {
-    try {
       registerTransaction(player.getAccount(), transaction);
       modifyBalance(player.getAccount(), transaction);
+
+      saveTransaction(player);
+      return player.getAccount().getBalance();
+  }
+
+  private void saveTransaction(PlayerModel player) {
+    try {
       playerRepository.save(player);
     } catch (DataIntegrityViolationException e) {
       throw new UniqueIdViolationException("TransactionId must be unique.");

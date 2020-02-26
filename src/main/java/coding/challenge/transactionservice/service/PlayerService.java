@@ -34,17 +34,13 @@ public class PlayerService {
   }
 
   public PlayerResponse getPlayer(long id) {
-    var playerModel = playerRepository.findById(id);
-    if (playerModel.isPresent()) {
-      return PlayerResponse.builder()
-              .id(playerModel.get().getId())
-              .name(playerModel.get().getUserName())
-              .transactionHistory(getTransactions(playerModel.get().getAccount().getId()))
-              .currentBalance(playerModel.get().getAccount().getBalance())
-              .build();
-    }
-
-    throw new PlayerNotFoundException("Player not found");
+    var playerModel = playerRepository.findById(id).orElseThrow(() -> new PlayerNotFoundException("Player not found"));
+    return PlayerResponse.builder()
+            .id(playerModel.getId())
+            .name(playerModel.getUserName())
+            .transactionHistory(getTransactions(playerModel.getAccount().getId()))
+            .currentBalance(playerModel.getAccount().getBalance())
+            .build();
   }
 
   private Set<TransactionModel> getTransactions(long id) {
