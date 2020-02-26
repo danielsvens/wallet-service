@@ -38,7 +38,7 @@ public class TransactionServiceV1Controller implements TransactionServiceV1 {
   @Override
   public ResponseEntity<TransactionRegisteredResponse> credit(@Valid Transaction transaction) {
     transaction.setType(TransactionType.CREDIT);
-    long balance = accountService.makeTransaction(transaction);
+    long balance = accountService.registerTransaction(transaction);
     var transactionResponse = TransactionRegisteredResponse.builder()
             .balance(balance)
             .message("Amount: " + transaction.getAmount() + " was successfully added to funds.")
@@ -50,7 +50,7 @@ public class TransactionServiceV1Controller implements TransactionServiceV1 {
   @Override
   public ResponseEntity<TransactionRegisteredResponse> debit(@Valid Transaction transaction) {
     transaction.setType(TransactionType.DEBIT);
-    long balance = accountService.makeTransaction(transaction);
+    long balance = accountService.registerTransaction(transaction);
     var transactionResponse = TransactionRegisteredResponse.builder()
             .balance(balance)
             .message("Amount: " + -transaction.getAmount() + " was successfully withdrawn from funds")

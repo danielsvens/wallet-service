@@ -27,7 +27,7 @@ public class AccountService {
     this.playerRepository = playerRepository;
   }
 
-  public long makeTransaction(Transaction transaction) {
+  public long registerTransaction(Transaction transaction) {
     var player = playerRepository.findById(transaction.getPlayerId())
             .orElseThrow(() -> new PlayerNotFoundException("Player not found"));;
 
@@ -35,7 +35,7 @@ public class AccountService {
         throw new InsufficientFundsException("Not enough funds to withdraw from");
       }
 
-      registerTransaction(player.getAccount(), transaction);
+      addTransaction(player.getAccount(), transaction);
       modifyBalance(player.getAccount(), transaction);
 
       saveTransaction(player);
@@ -54,7 +54,7 @@ public class AccountService {
     return account.getBalance() - transaction.getAmount() >= 0;
   }
 
-  private void registerTransaction(AccountModel account, Transaction transaction) {
+  private void addTransaction(AccountModel account, Transaction transaction) {
     account.getTransactions().add(TransactionModel.builder()
             .amount(getTransactionAmount(transaction))
             .date(LocalDateTime.now())
