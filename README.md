@@ -1,6 +1,12 @@
 # wallet-service
 simple wallet service
 
+This api uses a h2 database saved on file. resources/data/db.mv.db
+The database can be accessed via localhost:8080/h2-console
+JDBC url: jdbc:h2:./src/main/resources/data/db
+
+credentials found in application.properties
+
 ## Create player with empty wallet.
 <blockquote> POST /v1/service/createPlayer </blockquote>
 
