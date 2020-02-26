@@ -1,4 +1,4 @@
-package coding.challenge.transactionservice.Enum;
+package coding.challenge.transactionservice.enums;
 
 public enum  TransactionType {
   CREDIT,

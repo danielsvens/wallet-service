@@ -1,6 +1,6 @@
 package coding.challenge.transactionservice.model;
 
-import coding.challenge.transactionservice.Enum.TransactionType;
+import coding.challenge.transactionservice.enums.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package coding.challenge.transactionservice.pojo;
 
-import coding.challenge.transactionservice.Enum.TransactionType;
+import coding.challenge.transactionservice.enums.TransactionType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

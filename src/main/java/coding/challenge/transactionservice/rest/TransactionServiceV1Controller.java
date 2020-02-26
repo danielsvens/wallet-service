@@ -1,6 +1,6 @@
 package coding.challenge.transactionservice.rest;
 
-import coding.challenge.transactionservice.Enum.TransactionType;
+import coding.challenge.transactionservice.enums.TransactionType;
 import coding.challenge.transactionservice.pojo.Player;
 import coding.challenge.transactionservice.pojo.Transaction;
 import coding.challenge.transactionservice.response.PlayerCreatedResponse;

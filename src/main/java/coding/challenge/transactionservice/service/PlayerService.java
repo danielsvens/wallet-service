@@ -11,7 +11,6 @@ import coding.challenge.transactionservice.response.PlayerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -34,7 +33,9 @@ public class PlayerService {
   }
 
   public PlayerResponse getPlayer(long id) {
-    var playerModel = playerRepository.findById(id).orElseThrow(() -> new PlayerNotFoundException("Player not found"));
+    var playerModel = playerRepository.findById(id)
+            .orElseThrow(() -> new PlayerNotFoundException("Player not found"));
+
     return PlayerResponse.builder()
             .id(playerModel.getId())
             .name(playerModel.getUserName())

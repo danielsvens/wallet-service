@@ -1,6 +1,6 @@
 package coding.challenge.transactionservice.service;
 
-import coding.challenge.transactionservice.Enum.TransactionType;
+import coding.challenge.transactionservice.enums.TransactionType;
 import coding.challenge.transactionservice.exception.InsufficientFundsException;
 import coding.challenge.transactionservice.exception.PlayerNotFoundException;
 import coding.challenge.transactionservice.exception.UniqueIdViolationException;
@@ -29,7 +29,7 @@ public class AccountService {
 
   public long registerTransaction(Transaction transaction) {
     var player = playerRepository.findById(transaction.getPlayerId())
-            .orElseThrow(() -> new PlayerNotFoundException("Player not found"));;
+            .orElseThrow(() -> new PlayerNotFoundException("Player not found"));
 
       if (transaction.getType() == TransactionType.DEBIT && !isValidDebit(player.getAccount(), transaction)) {
         throw new InsufficientFundsException("Not enough funds to withdraw from");
