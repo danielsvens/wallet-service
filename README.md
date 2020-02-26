@@ -29,7 +29,7 @@ credentials found in application.properties
 
 transactionId must be a unique UUID or the transaction will be rejected.
 
-## withdraw funds to wallet.
+## Withdraw funds from wallet.
 <blockquote> PUT /v1/service/debit </blockquote>
 
 ```json
